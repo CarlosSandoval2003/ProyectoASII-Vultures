@@ -2846,6 +2846,40 @@ app.get('/wishlistItem/:wishlistItemId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+// AQUI ES LO DEL ESTADO 5
+app.put('/updateOrderStatus', async (req, res) => {
+  const { orderId } = req.body; // Recibe el ID de la orden en el cuerpo de la solicitud
+
+  let connection;
+  try {
+    connection = await mysql.createConnection(dbConfig);
+
+    // Actualizar el estado de la orden a 5
+    const updateOrderStatusQuery = `
+      UPDATE ORDEN
+      SET estado_orden = 5
+      WHERE id = ?`;
+    const [result] = await connection.execute(updateOrderStatusQuery, [orderId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Orden no encontrada.' });
+    }
+
+    // Confirmar transacción
+    await connection.commit();
+    res.status(200).json({ message: 'Estado de la orden actualizado exitosamente.' });
+  } catch (error) {
+    if (connection) {
+      await connection.rollback(); // Revertir en caso de error
+    }
+    console.error('Error al actualizar el estado de la orden:', error);
+    res.status(500).json({ message: 'Error interno del servidor.' });
+  } finally {
+    if (connection) {
+      await connection.end(); // Cerrar la conexión
+    }
+  }
+});
 
 
 app.post('/cartItem/:cartId/:itemProductId', async (req, res) => {
