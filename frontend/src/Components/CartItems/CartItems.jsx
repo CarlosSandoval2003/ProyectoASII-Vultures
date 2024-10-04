@@ -36,6 +36,13 @@ const [expiryDateError, setExpiryDateError] = useState("");
     cvv: "",
     fecha_expiracion: ""
   });
+  const [couponCode, setCouponCode] = useState(""); // Código del cupón ingresado
+const [couponValid, setCouponValid] = useState(false); // Estado del cupón
+const [discount, setDiscount] = useState(0); // Descuento aplicado
+const [couponError, setCouponError] = useState(""); // Mensaje de error del cupón
+const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
+
+
   const [validExpiryDate, setValidExpiryDate] = useState(false);
   const [saldo, setSaldo] = useState("");
 
@@ -46,7 +53,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
 
   const fetchPaymentMethods = async () => {
     try {
-      const response = await fetch(`https://proyectoasii-vultures.onrender.com/paymentMethods/${userId}`);
+      const response = await fetch(`http://localhost:4000/paymentMethods/${userId}`);
       const data = await response.json();
       setPaymentMethods(data);
     } catch (error) {
@@ -67,22 +74,22 @@ const [expiryDateError, setExpiryDateError] = useState("");
   useEffect(() => {
     
     if (userId && userId !== "0") {
-      fetch(`https://proyectoasii-vultures.onrender.com/cartItems/${userId}`)
+      fetch(`http://localhost:4000/cartItems/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setDisplayedItems(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/userAddresses/${userId}`)
+        fetch(`http://localhost:4000/userAddresses/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setAddresses(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/shippingMethods`)
+        fetch(`http://localhost:4000/shippingMethods`)
         .then((res) => res.json())
         .then((data) => {
           setShippingMethods(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/countries`)
+        fetch(`http://localhost:4000/countries`)
         .then((res) => res.json())
         .then((data) => {
           setCountries(data);
@@ -107,7 +114,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
 
   const handleSaveAddress = () => {
     // Guardar la nueva dirección en la base de datos
-    fetch(`https://proyectoasii-vultures.onrender.com/addAddress`, {
+    fetch(`http://localhost:4000/addAddress`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -146,7 +153,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
   const handleCheckout = async () => {
     
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/checkout', {
+      const response = await fetch('http://localhost:4000/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -154,7 +161,8 @@ const [expiryDateError, setExpiryDateError] = useState("");
         body: JSON.stringify({
           userId,
           shippingMethod,
-          cartItems: displayedItems.map(item => ({ id_item_producto: item.id, cantidad: item.cantidad }))
+          cartItems: displayedItems.map(item => ({ id_item_producto: item.id, cantidad: item.cantidad })),
+          couponCode
         })
       });
 
@@ -181,7 +189,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
             const selectedAddress = addressCH[0];
         console.log(userId, selectedAddress, selectedPaymentMethod, selectedShippingMethod, totalCompra);
             // Enviar los datos al backend
-            const response = await fetch('https://proyectoasii-vultures.onrender.com/saveOrder', {
+            const response = await fetch('http://localhost:4000/saveOrder', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -191,7 +199,8 @@ const [expiryDateError, setExpiryDateError] = useState("");
                 direccionEnvio: selectedAddress,
                 metodoEnvio: selectedShippingMethod,
                 metodoPago: selectedPaymentMethod,
-                totalCompra
+                totalCompra,
+                couponCode
               })
             });
         
@@ -230,7 +239,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
     );
 
     // Update quantity on the server
-    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
+    fetch(`http://localhost:4000/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -249,7 +258,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
     );
 
     // Update quantity on the server
-    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
+    fetch(`http://localhost:4000/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -293,7 +302,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
 
   const handleRemoveItem = async (userId, itemId) => {
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/removeCartItem', {
+      const response = await fetch('http://localhost:4000/removeCartItem', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -327,9 +336,9 @@ const [expiryDateError, setExpiryDateError] = useState("");
   };
 
   const calculateTotal = () => {
-    // Sumar los totales de todos los items del carrito
+    // Sumar los totales de todos los ítems del carrito
     const itemsTotal = displayedItems.reduce((total, item) => {
-      return total + ((item.precio - (item.precio * (item.descuento/100))) * item.cantidad);
+      return total + ((item.precio - (item.precio * (item.descuento / 100))) * item.cantidad);
     }, 0);
   
     // Obtener el precio del método de envío escogido
@@ -337,10 +346,17 @@ const [expiryDateError, setExpiryDateError] = useState("");
     const shippingPrice = selectedMethod ? selectedMethod.precio : 0;
   
     // Sumar el precio del método de envío al total de la compra
-    const total = itemsTotal + shippingPrice;
+    let total = itemsTotal + shippingPrice;
   
-    return total.toFixed(2);
+    // Aplicar el descuento del cupón
+    if (couponDiscount > 0) {
+      total -= (total * couponDiscount / 100); // Aplicar el descuento
+    }
+  
+    return total.toFixed(2); // Retornar el total formateado
   };
+  
+  
   
 
   const handlePaymentMethodChange = (event) => {
@@ -348,7 +364,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
     setPaymentCH([event.target.value]);
     console.log(paymentCH);
     // Llamar al backend para obtener el saldo asociado
-    fetch('https://proyectoasii-vultures.onrender.com/checkoutSaldo', {
+    fetch('http://localhost:4000/checkoutSaldo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -420,7 +436,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
   
       // Realizar la consulta a la base de datos
       try {
-        const response = await fetch('https://proyectoasii-vultures.onrender.com/checkCreditCard', {
+        const response = await fetch('http://localhost:4000/checkCreditCard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -433,7 +449,7 @@ const [expiryDateError, setExpiryDateError] = useState("");
         if (data.exists) {
           // Insertar los datos del método de pago en la base de datos
           try {
-            const saveResponse = await fetch('https://proyectoasii-vultures.onrender.com/savePaymentMethod', {
+            const saveResponse = await fetch('http://localhost:4000/savePaymentMethod', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -482,6 +498,39 @@ const [expiryDateError, setExpiryDateError] = useState("");
     }
   };
   
+  const handleVerifyCoupon = async () => {
+    if (!couponCode) {
+      setCouponError("Por favor, ingresa un código de cupón.");
+      return;
+    }
+  
+    try {
+      const response = await fetch('http://localhost:4000/verifyCoupon', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ codigo: couponCode })
+      });
+  
+      const data = await response.json();
+  
+      if (!data.success) {
+        setCouponError(data.message); // Mostrar mensaje de error específico del backend
+      } else {
+        // Si el cupón es válido
+        setCouponError(""); // Limpiar cualquier error
+        setCouponValid(true); // Cambia el estado del cupón a válido
+        setDiscount(data.descuento_porcentaje); // Establece el porcentaje de descuento
+        setCouponDiscount(data.descuento_porcentaje); 
+        const newTotal = calculateTotal();
+        setTotal(newTotal); 
+      }
+    } catch (error) {
+      console.error("Error al verificar el cupón:", error);
+      setCouponError("Ocurrió un error al verificar el cupón.");
+    }
+  };
   
   
 
@@ -729,6 +778,21 @@ const handleExpiryDateChange = (e) => {
             </div>
           )}
         </div>
+        <div>
+  <label>Ingresar cupón:</label>
+  <input
+    type="text"
+    value={couponCode}
+    onChange={(e) => setCouponCode(e.target.value)}
+    placeholder="Ingresa tu cupón"
+    disabled={couponValid} // Bloquea el campo si el cupón es válido
+  />
+  <button onClick={handleVerifyCoupon} disabled={couponValid}>
+    VERIFICAR
+  </button>
+  {couponValid && <p>Cupón válido. Descuento: {discount}%</p>}
+  {couponError && <p>{couponError}</p>}
+</div>
         <button onClick={handleCheckout}>Checkout</button>
       </div>
     </div>

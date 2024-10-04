@@ -1,0 +1,72 @@
+.listproduct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 740px;
+  padding: 10px 50px;
+  margin: 30px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.listproduct-format-main {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 0.5fr; /* Ajustamos los anchos para mejorar la distribución */
+  gap: 10px;
+  width: 100%;
+  padding: 20px 0px;
+  color: #454545;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center; /* Alinea el texto en el centro de cada columna */
+  justify-items: center; /* Centra los elementos dentro de la cuadrícula */
+}
+
+.listproduct-format {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 0.5fr; /* Coincide con el header */
+  align-items: center;
+  font-weight: 500;
+  text-align: center; /* Centra el contenido de cada celda */
+  justify-items: center; /* Centra los elementos dentro de la cuadrícula */
+}
+
+.listproduct-remove-icon {
+  cursor: pointer;
+  margin: auto; /* Centra el ícono en la celda */
+}
+
+.listproduct-allproducts {
+  overflow-y: auto;
+  width: 100%;
+}
+
+hr {
+  margin: 0; /* Ajusta el espaciado de las líneas separadoras */
+}
+
+@media (max-width: 800px) {
+  .listproduct {
+    box-sizing: border-box;
+    width: 95%;
+    height: 100%;
+    padding: 10px 30px;
+    margin: 20px auto;
+  }
+
+  .listproduct-format-main {
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Ajusta las columnas en pantallas pequeñas */
+    padding: 15px 0px;
+    color: #454545;
+    font-size: 12px;
+  }
+
+  .listproduct-format {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+
+  .listproduct-product-icon {
+    height: 60px;
+  }
+}
