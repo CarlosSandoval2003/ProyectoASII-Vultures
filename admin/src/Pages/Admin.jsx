@@ -9,6 +9,8 @@ import ListPromociones from "../Components/ListPromociones/ListPromociones";
 import ListOrdenes from "../Components/ListOrdenes/ListOrdenes";
 import AddAdmin from "../Components/AddAdmin/AddAdmin";
 import ListAdmin from "../Components/ListAdmin/ListAdmin";
+import ListCupones from "../Components/ListCupones/ListCupones";
+import AddCupones from "../Components/AddCupones/AddCupones";
 
 const Admin = () => {
 
@@ -23,6 +25,8 @@ const Admin = () => {
         <Route path="/listordenes" element={<ListOrdenes />} />
         <Route path="/addadmin" element={<AddAdmin />} />
         <Route path="/listadmin" element={<ListAdmin />} />
+        <Route path="/addCupones" element={<AddCupones />} />
+        <Route path="/listCUpones" element={<ListCupones />} />
       </Routes>
     </div>
   );
