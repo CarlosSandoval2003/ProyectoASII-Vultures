@@ -2147,7 +2147,7 @@ app.post("/checkoutSaldo", async (req, res) => {
 });
 
 app.post("/saveOrder", async (req, res) => {
-  const { userId, direccionEnvio, metodoEnvio, metodoPago, totalCompra } = req.body;
+  const { userId, direccionEnvio, metodoEnvio, metodoPago, totalCompra, couponCode } = req.body;
   const totalCompra2 = parseFloat(totalCompra);
   const userId2 = parseInt(userId);
   const direccionEnvio2 = parseInt(direccionEnvio);
@@ -2167,6 +2167,23 @@ app.post("/saveOrder", async (req, res) => {
       VALUES (?, CURRENT_TIMESTAMP, ?, ?, ?, ?, 1)`;
     const [result] = await connection.execute(insertOrderQuery, [userId2, metodoPago2, direccionEnvio2, metodoEnvio2, totalCompra2]);
     const orderId = result.insertId;
+
+    // Verificar si se utilizó un cupón
+    if (couponCode) {
+      // Buscar el cupón en la base de datos
+      const [couponResult] = await connection.execute(
+        'SELECT * FROM CUPON WHERE codigo = ?',
+        [couponCode]
+      );
+
+      if (couponResult.length > 0) {
+        const coupon = couponResult[0];
+
+        // Incrementar el uso_actual del cupón
+        const updateCouponQuery = `UPDATE CUPON SET uso_actual = uso_actual + 1 WHERE id = ?`;
+        await connection.execute(updateCouponQuery, [coupon.id]);
+      }
+    }
 
     // Buscar los registros en CARRITO_ITEM
     const cartQuery = `
@@ -2266,6 +2283,208 @@ app.post("/saveOrder", async (req, res) => {
     res.status(500).json({ success: false, error: 'Error al guardar la orden.' });
   } finally {
     if (connection) await connection.close();
+  }
+});
+
+app.get('/ordenes/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  let connection;
+
+  try {
+    connection = await mysql.createConnection(dbConfig);
+    
+    const [rows] = await connection.execute(
+      `SELECT * FROM ORDEN WHERE id_usuario = ?`,
+      [userId]
+    );
+
+    res.json(rows);  // Enviar las órdenes obtenidas como respuesta
+  } catch (error) {
+    console.error('Error al obtener las órdenes:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
+});
+
+
+app.put('/cancelarorden/:id', async (req, res) => {
+  const orderId = req.params.id;
+
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    const [result] = await connection.execute(
+      `UPDATE ORDEN SET estado_orden = 5 WHERE id = ?`,
+      [orderId]
+    );
+
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Orden cancelada exitosamente' });
+    } else {
+      res.status(404).json({ error: 'Orden no encontrada' });
+    }
+
+    await connection.end();
+  } catch (error) {
+    console.error('Error al cancelar la orden:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
+
+app.post('/addcupon', async (req, res) => {
+  const { codigo, descuento_porcentaje, fecha_expiracion, uso_maximo, uso_actual } = req.body;
+
+  // Validar que todos los campos requeridos estén presentes
+  if (!codigo || !descuento_porcentaje || !fecha_expiracion) {
+    return res.status(400).json({ success: false, message: "Todos los campos son obligatorios." });
+  }
+
+  let connection;
+  try {
+    // Establecer la conexión a MySQL
+    connection = await mysql.createConnection(dbConfig);
+
+    // Verificar si el código del cupón ya existe
+    const [existingCoupon] = await connection.execute('SELECT id FROM CUPON WHERE codigo = ?', [codigo]);
+    
+    if (existingCoupon.length > 0) {
+      return res.status(400).json({ success: false, message: "El código del cupón ya existe." });
+    }
+
+    // Consulta para insertar un nuevo cupón en la tabla CUPON
+    const query = `
+      INSERT INTO CUPON (codigo, descuento_porcentaje, fecha_expiracion, uso_maximo, uso_actual)
+      VALUES (?, ?, ?, ?, ?)
+    `;
+
+    const values = [codigo, descuento_porcentaje, fecha_expiracion, uso_maximo || 1, uso_actual || 0];
+
+    // Ejecutar la consulta
+    await connection.execute(query, values);
+
+    res.json({ success: true, message: 'Cupón agregado correctamente' });
+  } catch (error) {
+    console.error('Error al agregar el cupón:', error);
+    res.status(500).json({ success: false, message: 'Error al agregar el cupón' });
+  } finally {
+    if (connection) {
+      try {
+        await connection.end();
+      } catch (error) {
+        console.error('Error al cerrar la conexión:', error);
+      }
+    }
+  }
+});
+
+app.delete('/removecupon', async (req, res) => {
+  const { codigo } = req.body;
+
+  if (!codigo) {
+    return res.status(400).json({ success: false, message: 'El código del cupón es requerido.' });
+  }
+
+  let connection;
+  try {
+    connection = await mysql.createConnection(dbConfig);
+
+    // Eliminar el cupón basado en su código
+    const [result] = await connection.execute('DELETE FROM CUPON WHERE codigo = ?', [codigo]);
+
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: 'Cupón eliminado correctamente' });
+    } else {
+      res.status(404).json({ success: false, message: 'Cupón no encontrado' });
+    }
+  } catch (error) {
+    console.error('Error al eliminar el cupón:', error);
+    res.status(500).json({ success: false, message: 'Error al eliminar el cupón' });
+  } finally {
+    if (connection) {
+      try {
+        await connection.end();
+      } catch (error) {
+        console.error('Error al cerrar la conexión:', error);
+      }
+    }
+  }
+});
+
+app.get('/allcupones', async (req, res) => {
+  let connection;
+  try {
+    // Establecer la conexión a MySQL
+    connection = await mysql.createConnection(dbConfig);
+
+    // Consulta para obtener todos los cupones, excluyendo el campo 'id'
+    const [rows] = await connection.execute(`
+      SELECT codigo, descuento_porcentaje, fecha_expiracion, uso_maximo, uso_actual 
+      FROM CUPON
+    `);
+
+    // Enviar los cupones como respuesta
+    res.json(rows);
+  } catch (error) {
+    console.error('Error al obtener los cupones:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener los cupones' });
+  } finally {
+    if (connection) {
+      try {
+        await connection.end();
+      } catch (error) {
+        console.error('Error al cerrar la conexión:', error);
+      }
+    }
+  }
+});
+
+app.post('/verifyCoupon', async (req, res) => {
+  const { codigo } = req.body; // Obtener el código del cupón enviado desde el cliente
+
+  let connection;
+  try {
+    // Conectar a la base de datos
+    connection = await mysql.createConnection(dbConfig);
+
+    // Buscar el cupón en la base de datos
+    const [couponResult] = await connection.execute(
+      'SELECT * FROM CUPON WHERE codigo = ?',
+      [codigo]
+    );
+
+    if (couponResult.length === 0) {
+      return res.json({ success: false, message: "El cupón no existe." });
+    }
+
+    const coupon = couponResult[0];
+
+    // Verificar si el cupón ha expirado
+    const today = new Date().toISOString().slice(0, 10); // Fecha actual en formato YYYY-MM-DD
+    if (new Date(coupon.fecha_expiracion) < new Date(today)) {
+      return res.json({ success: false, message: "El cupón ha expirado." });
+    }
+
+    // Verificar si ha alcanzado el máximo de usos
+    if (coupon.uso_actual >= coupon.uso_maximo) {
+      return res.json({ success: false, message: "El cupón ha alcanzado su límite de usos." });
+    }
+
+    // Si el cupón es válido, devolver el porcentaje de descuento
+    res.json({
+      success: true,
+      descuento_porcentaje: coupon.descuento_porcentaje
+    });
+
+  } catch (error) {
+    console.error('Error al verificar el cupón:', error);
+    res.status(500).json({ success: false, message: "Error en el servidor al verificar el cupón." });
+  } finally {
+    if (connection) {
+      await connection.end(); // Cerrar la conexión a la base de datos
+    }
   }
 });
 
