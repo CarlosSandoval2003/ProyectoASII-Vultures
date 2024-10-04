@@ -17,7 +17,7 @@ const AddCupones = () => {
 
   const handleGuardar = async () => {
     try {
-      const response = await fetch("http://localhost:4000/addcupon", {
+      const response = await fetch("https://proyectoasii-vultures.onrender.com/addcupon", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

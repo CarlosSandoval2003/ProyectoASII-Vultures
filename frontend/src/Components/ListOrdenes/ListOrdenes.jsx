@@ -8,7 +8,7 @@ const ListOrdenes = () => {
 
   const fetchOrdenes = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/ordenes/${userId}`);
+      const response = await fetch(`https://proyectoasii-vultures.onrender.com/ordenes/${userId}`);
       const data = await response.json();
       setOrdenes(data);
     } catch (error) {
@@ -22,7 +22,7 @@ const ListOrdenes = () => {
       return;
     }
     try {
-      await fetch(`http://localhost:4000/cancelarorden/${id}`, {
+      await fetch(`https://proyectoasii-vultures.onrender.com/cancelarorden/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

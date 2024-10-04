@@ -9,9 +9,9 @@ const ListCupones = () => {
 
   const fetchCupones = async () => {
     try {
-      let url = 'http://localhost:4000/allcupones'; // Cambiar endpoint para obtener cupones
+      let url = 'https://proyectoasii-vultures.onrender.com/allcupones'; // Cambiar endpoint para obtener cupones
       if (searchTerm.trim() !== '') {
-        url = `http://localhost:4000/searchcupon?search=${encodeURIComponent(searchTerm)}`;
+        url = `https://proyectoasii-vultures.onrender.com/searchcupon?search=${encodeURIComponent(searchTerm)}`;
       }
       const response = await fetch(url);
       const data = await response.json();
@@ -27,7 +27,7 @@ const ListCupones = () => {
 
   const removeCupon = async (codigo) => {
     try {
-      await fetch('http://localhost:4000/removecupon', { // Cambiar endpoint para eliminar cupones
+      await fetch('https://proyectoasii-vultures.onrender.com/removecupon', { // Cambiar endpoint para eliminar cupones
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

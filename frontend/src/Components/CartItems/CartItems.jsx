@@ -53,7 +53,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const fetchPaymentMethods = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/paymentMethods/${userId}`);
+      const response = await fetch(`https://proyectoasii-vultures.onrender.com/paymentMethods/${userId}`);
       const data = await response.json();
       setPaymentMethods(data);
     } catch (error) {
@@ -74,22 +74,22 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   useEffect(() => {
     
     if (userId && userId !== "0") {
-      fetch(`http://localhost:4000/cartItems/${userId}`)
+      fetch(`https://proyectoasii-vultures.onrender.com/cartItems/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setDisplayedItems(data);
         });
-        fetch(`http://localhost:4000/userAddresses/${userId}`)
+        fetch(`https://proyectoasii-vultures.onrender.com/userAddresses/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setAddresses(data);
         });
-        fetch(`http://localhost:4000/shippingMethods`)
+        fetch(`https://proyectoasii-vultures.onrender.com/shippingMethods`)
         .then((res) => res.json())
         .then((data) => {
           setShippingMethods(data);
         });
-        fetch(`http://localhost:4000/countries`)
+        fetch(`https://proyectoasii-vultures.onrender.com/countries`)
         .then((res) => res.json())
         .then((data) => {
           setCountries(data);
@@ -114,7 +114,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const handleSaveAddress = () => {
     // Guardar la nueva dirección en la base de datos
-    fetch(`http://localhost:4000/addAddress`, {
+    fetch(`https://proyectoasii-vultures.onrender.com/addAddress`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +153,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   const handleCheckout = async () => {
     
     try {
-      const response = await fetch('http://localhost:4000/checkout', {
+      const response = await fetch('https://proyectoasii-vultures.onrender.com/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -189,7 +189,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
             const selectedAddress = addressCH[0];
         console.log(userId, selectedAddress, selectedPaymentMethod, selectedShippingMethod, totalCompra);
             // Enviar los datos al backend
-            const response = await fetch('http://localhost:4000/saveOrder', {
+            const response = await fetch('https://proyectoasii-vultures.onrender.com/saveOrder', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -239,7 +239,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     );
 
     // Update quantity on the server
-    fetch(`http://localhost:4000/cartItems/updateQuantity/${itemId}`, {
+    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -258,7 +258,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     );
 
     // Update quantity on the server
-    fetch(`http://localhost:4000/cartItems/updateQuantity/${itemId}`, {
+    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -302,7 +302,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const handleRemoveItem = async (userId, itemId) => {
     try {
-      const response = await fetch('http://localhost:4000/removeCartItem', {
+      const response = await fetch('https://proyectoasii-vultures.onrender.com/removeCartItem', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -364,7 +364,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     setPaymentCH([event.target.value]);
     console.log(paymentCH);
     // Llamar al backend para obtener el saldo asociado
-    fetch('http://localhost:4000/checkoutSaldo', {
+    fetch('https://proyectoasii-vultures.onrender.com/checkoutSaldo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -436,7 +436,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   
       // Realizar la consulta a la base de datos
       try {
-        const response = await fetch('http://localhost:4000/checkCreditCard', {
+        const response = await fetch('https://proyectoasii-vultures.onrender.com/checkCreditCard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -449,7 +449,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
         if (data.exists) {
           // Insertar los datos del método de pago en la base de datos
           try {
-            const saveResponse = await fetch('http://localhost:4000/savePaymentMethod', {
+            const saveResponse = await fetch('https://proyectoasii-vultures.onrender.com/savePaymentMethod', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -505,7 +505,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     }
   
     try {
-      const response = await fetch('http://localhost:4000/verifyCoupon', {
+      const response = await fetch('https://proyectoasii-vultures.onrender.com/verifyCoupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
