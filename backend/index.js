@@ -2949,3 +2949,41 @@ app.get('/user/:userId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.post('/validarCupon', async (req, res) => {
+  const { codigoCupon } = req.body;
+
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+
+    // Consulta para verificar si el cupón existe y obtener los datos
+    const [cuponResult] = await connection.execute(
+      `SELECT descuento_porcentaje, fecha_expiracion, uso_maximo, uso_actual 
+       FROM CUPON WHERE codigo = ?`,
+      [codigoCupon]
+    );
+
+    if (cuponResult.length === 0) {
+      return res.status(404).json({ error: 'Cupón no encontrado' });
+    }
+
+    const cupon = cuponResult[0];
+    const hoy = new Date();
+
+    // Verificar si el cupón ha expirado
+    if (new Date(cupon.fecha_expiracion) < hoy) {
+      return res.status(400).json({ error: 'El cupón ha expirado' });
+    }
+
+    // Verificar si el cupón ha excedido el número máximo de usos
+    if (cupon.uso_actual >= cupon.uso_maximo) {
+      return res.status(400).json({ error: 'El cupón ha alcanzado el límite de usos' });
+    }
+
+    // Devolver el porcentaje de descuento
+    res.json({ descuento: cupon.descuento_porcentaje });
+  } catch (error) {
+    console.error('Error al validar el cupón:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
