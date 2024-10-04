@@ -214,6 +214,7 @@ INSERT INTO ESTADO_ORDEN (estado) VALUES ('Pendiente');
 INSERT INTO ESTADO_ORDEN (estado) VALUES ('En proceso');
 INSERT INTO ESTADO_ORDEN (estado) VALUES ('Enviado');
 INSERT INTO ESTADO_ORDEN (estado) VALUES ('Entregado');
+INSERT INTO ESTADO_ORDEN (estado) VALUES ('Cancelado');
 
 -- Inserciones para la tabla ESTADO_PRODUCTO
 INSERT INTO ESTADO_PRODUCTO (estado) VALUES ('DISPONIBLE');

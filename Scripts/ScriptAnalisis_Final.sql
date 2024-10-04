@@ -190,3 +190,12 @@ CREATE TABLE TARJETA (
     id_banco INT NOT NULL,
     FOREIGN KEY (id_banco) REFERENCES BANCO(id)
 );
+
+CREATE TABLE CUPON (
+    id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    codigo VARCHAR(255) NOT NULL,             -- Código del cupón
+    descuento_porcentaje DOUBLE NOT NULL,      -- Porcentaje de descuento
+    fecha_expiracion DATE NOT NULL,           -- Fecha de caducidad
+    uso_maximo INT DEFAULT 1,                 -- Máximo de usos
+    uso_actual INT DEFAULT 0                 -- Veces que se ha usado
+);

@@ -13,6 +13,7 @@ import men_banner from "./Components/Assets/banner_mens.png";
 import kid_banner from "./Components/Assets/banner_kids.png";
 import LoginSignup from "./Pages/LoginSignup";
 import ProductDisplay from "./Components/ProductDisplay/ProductDisplay";
+import ListOrdenes from "./Components/ListOrdenes/ListOrdenes";
 
 export const AuthContext = createContext(null);
 
@@ -44,6 +45,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/listordenes" element={<ListOrdenes />} />
             <Route path="/login" element={<LoginSignup />} />
           </Routes>
         </AuthContext.Provider>
