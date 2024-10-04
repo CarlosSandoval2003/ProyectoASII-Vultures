@@ -49,6 +49,18 @@ const Sidebar = () => {
           <p>Ver Admins</p>
         </div>
       </Link>
+      <Link to='/addCupones' style={{ textDecoration: 'none' }}>
+        <div className="sidebar-item">
+          <img src={add_product_icon} alt="" />
+          <p>Agregar Cupones</p>
+        </div>
+      </Link>
+      <Link to='/listCupones' style={{ textDecoration: 'none' }}>
+        <div className="sidebar-item">
+          <img src={list_product_icon} alt="" />
+          <p>Ver Cupones</p>
+        </div>
+      </Link>
     </div>
   )
 }
