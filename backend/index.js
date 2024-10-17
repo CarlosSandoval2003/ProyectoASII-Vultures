@@ -7,6 +7,9 @@ const cors = require("cors");
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');  // Importar cliente S3 del SDK v3
+const { Upload } = require('@aws-sdk/lib-storage');  // Utilizar el cliente de carga (Upload) para S3
+const multerS3 = require('multer-s3');
 
 //prueba de envio
 
@@ -47,21 +50,39 @@ const storage = multer.diskStorage({
   },
 });
 
-// Modificar multer para aceptar múltiples archivos
-const upload = multer({ storage: storage }).array('product', 3); // Cambiado a 'product' para que coincida con el nombre del campo esperado
+const s3 = new S3Client({
+  region: 'us-east-2', 
+  credentials: {
+    accessKeyId: 'AKIATBRPQRNMSWJ4KU44', 
+    secretAccessKey: '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', 
+  },
+});
 
-app.post('/upload', (req, res) => {
-  upload(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({ success: 0, message: 'Error al cargar imágenes' });
-    }
+// Configuración de Multer para almacenar en S3 usando la versión 3
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'bucket-asii',  // Nombre de tu bucket
+    // No incluyas el parámetro acl
+    key: (req, file, cb) => {
+      cb(null, `upload/images/${Date.now().toString()}-${file.originalname}`);
+    },
+  }),
+});
 
-    const imageUrls = req.files.map((file) => `https://proyectoasii-vultures.onrender.com/images/${file.filename}`);
 
-    res.json({
-      success: 1,
-      image_urls: imageUrls,
-    });
+app.post('/upload', upload.array('product', 3), (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ success: 0, message: 'No se cargaron imágenes' });
+  }
+
+  // Aquí se obtienen las URLs de las imágenes almacenadas en S3
+  const imageUrls = req.files.map((file) => file.location); // file.location es la URL pública en S3
+
+  // Responder con un objeto que contiene las URLs de las imágenes
+  res.json({
+    success: 1,
+    image_urls: imageUrls, // Devolver la lista de URLs de las imágenes
   });
 });
 
