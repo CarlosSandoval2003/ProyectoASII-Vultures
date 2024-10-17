@@ -10,6 +10,7 @@ const saltRounds = 10;
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');  // Importar cliente S3 del SDK v3
 const { Upload } = require('@aws-sdk/lib-storage');  // Utilizar el cliente de carga (Upload) para S3
 const multerS3 = require('multer-s3');
+require('dotenv').config();
 
 //prueba de envio
 
@@ -53,8 +54,8 @@ const storage = multer.diskStorage({
 const s3 = new S3Client({
   region: 'us-east-2', 
   credentials: {
-    accessKeyId: 'AKIATBRPQRNMSWJ4KU44', 
-    secretAccessKey: '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', 
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID, 
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   },
 });
 
