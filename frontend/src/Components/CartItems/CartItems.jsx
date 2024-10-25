@@ -46,6 +46,17 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   const [validExpiryDate, setValidExpiryDate] = useState(false);
   const [saldo, setSaldo] = useState("");
 
+  const [monedas, setMonedas] = useState([]);
+  const [selectedMoneda, setSelectedMoneda] = useState('');
+
+  useEffect(() => {
+    // Realiza la solicitud para obtener las monedas
+    fetch('https://sturdy-roan-water.glitch.me/monedas')
+      .then(response => response.json())
+      .then(data => setMonedas(data))
+      .catch(error => console.error('Error al obtener monedas:', error));
+  }, []);
+
   const handleNombrePortadorChange = (e) => {
     const { value } = e.target;
     setNewPaymentMethod({ ...newPaymentMethod, nombre_portador: value });
@@ -771,6 +782,21 @@ const handleExpiryDateChange = (e) => {
   />
   {expiryDateError && <p>{expiryDateError}</p>}
 </div>
+<div>
+          <label htmlFor="moneda">Moneda:</label>
+          <select
+            id="moneda"
+            value={selectedMoneda}
+            onChange={(e) => setSelectedMoneda(e.target.value)}
+          >
+            <option value="">Selecciona una moneda</option>
+            {monedas.map((moneda) => (
+              <option key={moneda.id} value={moneda.simbolo}>
+                {moneda.nombre} ({moneda.simbolo})
+              </option>
+            ))}
+          </select>
+        </div>
 <div>
 <button onClick={handleSavePaymentMethod} disabled={cardNumberError || cvvError || expiryDateError}>Guardar</button>
                 <button onClick={handleCancelPayment}>Cancelar</button>
