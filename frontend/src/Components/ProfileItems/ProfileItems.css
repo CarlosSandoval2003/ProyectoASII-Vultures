@@ -38,4 +38,8 @@
     .profile-info p {
         font-size: 14px;
     }
+
+    .order-button {
+        width: 100%; /* Hacer el botón más grande en pantallas pequeñas */
+    }
 }
