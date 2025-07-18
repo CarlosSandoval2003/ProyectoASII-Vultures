@@ -19,7 +19,7 @@ const AddPromociones = () => {
 
   const fetchCategorias = async () => {
     try {
-      const response = await fetch("https://proyectoasii-vultures.onrender.com/categories");
+      const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/categories");
       const data = await response.json();
       setCategorias(data);
     } catch (error) {
@@ -66,7 +66,7 @@ const AddPromociones = () => {
           categorias: [categoriaId] // Se envía solo una categoría por cada iteración
         };
 
-        const response = await fetch("https://proyectoasii-vultures.onrender.com/addpromotions", {
+        const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/addpromotions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -51,7 +51,7 @@ const AddAdmin = () => {
       return;
     }
     try {
-      const response = await fetch("https://proyectoasii-vultures.onrender.com/addadmin", {
+      const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/addadmin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -64,7 +64,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const fetchPaymentMethods = async () => {
     try {
-      const response = await fetch(`https://proyectoasii-vultures.onrender.com/paymentMethods/${userId}`);
+      const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/paymentMethods/${userId}`);
       const data = await response.json();
       setPaymentMethods(data);
     } catch (error) {
@@ -85,22 +85,22 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   useEffect(() => {
     
     if (userId && userId !== "0") {
-      fetch(`https://proyectoasii-vultures.onrender.com/cartItems/${userId}`)
+      fetch(`https://plankton-app-nhztk.ondigitalocean.app/cartItems/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setDisplayedItems(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/userAddresses/${userId}`)
+        fetch(`https://plankton-app-nhztk.ondigitalocean.app/userAddresses/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           setAddresses(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/shippingMethods`)
+        fetch(`https://plankton-app-nhztk.ondigitalocean.app/shippingMethods`)
         .then((res) => res.json())
         .then((data) => {
           setShippingMethods(data);
         });
-        fetch(`https://proyectoasii-vultures.onrender.com/countries`)
+        fetch(`https://plankton-app-nhztk.ondigitalocean.app/countries`)
         .then((res) => res.json())
         .then((data) => {
           setCountries(data);
@@ -125,7 +125,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const handleSaveAddress = () => {
     // Guardar la nueva dirección en la base de datos
-    fetch(`https://proyectoasii-vultures.onrender.com/addAddress`, {
+    fetch(`https://plankton-app-nhztk.ondigitalocean.app/addAddress`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -164,7 +164,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   const handleCheckout = async () => {
     
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/checkout', {
+      const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -200,7 +200,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
             const selectedAddress = addressCH[0];
         console.log(userId, selectedAddress, selectedPaymentMethod, selectedShippingMethod, totalCompra);
             // Enviar los datos al backend
-            const response = await fetch('https://proyectoasii-vultures.onrender.com/saveOrder', {
+            const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/saveOrder', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -250,7 +250,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     );
 
     // Update quantity on the server
-    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
+    fetch(`https://plankton-app-nhztk.ondigitalocean.app/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -269,7 +269,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     );
 
     // Update quantity on the server
-    fetch(`https://proyectoasii-vultures.onrender.com/cartItems/updateQuantity/${itemId}`, {
+    fetch(`https://plankton-app-nhztk.ondigitalocean.app/cartItems/updateQuantity/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -313,7 +313,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
 
   const handleRemoveItem = async (userId, itemId) => {
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/removeCartItem', {
+      const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/removeCartItem', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -375,7 +375,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     setPaymentCH([event.target.value]);
     console.log(paymentCH);
     // Llamar al backend para obtener el saldo asociado
-    fetch('https://proyectoasii-vultures.onrender.com/checkoutSaldo', {
+    fetch('https://plankton-app-nhztk.ondigitalocean.app/checkoutSaldo', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -447,7 +447,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
   
       // Realizar la consulta a la base de datos
       try {
-        const response = await fetch('https://proyectoasii-vultures.onrender.com/checkCreditCard', {
+        const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/checkCreditCard', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -460,7 +460,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
         if (data.exists) {
           // Insertar los datos del método de pago en la base de datos
           try {
-            const saveResponse = await fetch('https://proyectoasii-vultures.onrender.com/savePaymentMethod', {
+            const saveResponse = await fetch('https://plankton-app-nhztk.ondigitalocean.app/savePaymentMethod', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -516,7 +516,7 @@ const [couponDiscount, setCouponDiscount] = useState(0); // Descuento del cupón
     }
   
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/verifyCoupon', {
+      const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/verifyCoupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

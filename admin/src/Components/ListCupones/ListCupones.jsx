@@ -9,9 +9,9 @@ const ListCupones = () => {
 
   const fetchCupones = async () => {
     try {
-      let url = 'https://proyectoasii-vultures.onrender.com/allcupones'; // Cambiar endpoint para obtener cupones
+      let url = 'https://plankton-app-nhztk.ondigitalocean.app/allcupones'; // Cambiar endpoint para obtener cupones
       if (searchTerm.trim() !== '') {
-        url = `https://proyectoasii-vultures.onrender.com/searchcupon?search=${encodeURIComponent(searchTerm)}`;
+        url = `https://plankton-app-nhztk.ondigitalocean.app/searchcupon?search=${encodeURIComponent(searchTerm)}`;
       }
       const response = await fetch(url);
       const data = await response.json();
@@ -27,7 +27,7 @@ const ListCupones = () => {
 
   const removeCupon = async (codigo) => {
     try {
-      await fetch('https://proyectoasii-vultures.onrender.com/removecupon', { // Cambiar endpoint para eliminar cupones
+      await fetch('https://plankton-app-nhztk.ondigitalocean.app/removecupon', { // Cambiar endpoint para eliminar cupones
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

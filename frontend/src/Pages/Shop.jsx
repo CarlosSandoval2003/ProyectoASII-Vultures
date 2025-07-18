@@ -17,7 +17,7 @@ const Shop = () => {
 
   const fetchPromoCategory = async () => {
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/promo-category');
+      const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/promo-category');
       const data = await response.json();
       if (data.ID_CATEGORIA != null) {
         setPromoCategory(data.ID_CATEGORIA);
@@ -39,12 +39,12 @@ const Shop = () => {
   }, []);
 
   const fetchInfo = () => {
-    fetch('https://proyectoasii-vultures.onrender.com/popularinwomen')
+    fetch('https://plankton-app-nhztk.ondigitalocean.app/popularinwomen')
       .then((res) => res.json())
       .then((data) => setPopular(data));
 
     // Modifica la URL para obtener los productos más recientes desde Express.js
-    fetch('https://proyectoasii-vultures.onrender.com/productos-recientes') // Cambia esta URL
+    fetch('https://plankton-app-nhztk.ondigitalocean.app/productos-recientes') // Cambia esta URL
       .then((res) => res.json())
       .then((data) => setNewCollection(data));
   };

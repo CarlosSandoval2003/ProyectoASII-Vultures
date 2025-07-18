@@ -7,7 +7,7 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://proyectoasii-vultures.onrender.com/loginAdmin', {
+      const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/loginAdmin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

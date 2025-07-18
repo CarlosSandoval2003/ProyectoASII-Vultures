@@ -32,7 +32,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchParentCategories = async () => {
       try {
-        const response = await fetch('https://proyectoasii-vultures.onrender.com/ParentCategoriesNav');
+        const response = await fetch('https://plankton-app-nhztk.ondigitalocean.app/ParentCategoriesNav');
         if (response.ok) {
           const data = await response.json();
           setParentCategories(data);
@@ -49,7 +49,7 @@ const Navbar = () => {
 
   const fetchSubCategories = async (categoryId) => {
     try {
-      const response = await fetch(`https://proyectoasii-vultures.onrender.com/SubCategories/${categoryId}`);
+      const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/SubCategories/${categoryId}`);
       if (response.ok) {
         const data = await response.json();
         return data;

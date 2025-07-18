@@ -14,7 +14,7 @@ const ShopCategory = (props) => {
   
 
   const fetchInfo = () => { 
-    fetch('https://proyectoasii-vultures.onrender.com/allproductsDisplay') 
+    fetch('https://plankton-app-nhztk.ondigitalocean.app/allproductsDisplay') 
       .then((res) => res.json()) 
       .then((data) => {
         setAllProducts(data);

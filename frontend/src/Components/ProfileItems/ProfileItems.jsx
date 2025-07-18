@@ -10,7 +10,7 @@ const ProfileItems = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch(`https://proyectoasii-vultures.onrender.com/user/${userId}`);
+        const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/user/${userId}`);
         const data = await response.json();
         setUser(data);
       } catch (error) {

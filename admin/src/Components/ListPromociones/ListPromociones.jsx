@@ -12,9 +12,9 @@ const ListPromociones = () => {
 
   const fetchPromociones = async () => {
     try {
-      let url = 'https://proyectoasii-vultures.onrender.com/allpromociones';
+      let url = 'https://plankton-app-nhztk.ondigitalocean.app/allpromociones';
       if (searchTerm.trim() !== '') {
-        url = `https://proyectoasii-vultures.onrender.com/searchpromocion?search=${encodeURIComponent(searchTerm)}`;
+        url = `https://plankton-app-nhztk.ondigitalocean.app/searchpromocion?search=${encodeURIComponent(searchTerm)}`;
       }
       const response = await fetch(url);
       const data = await response.json();
@@ -43,7 +43,7 @@ const ListPromociones = () => {
 
   const removePromocion = async (id) => {
     try {
-      await fetch('https://proyectoasii-vultures.onrender.com/removepromocion', {
+      await fetch('https://plankton-app-nhztk.ondigitalocean.app/removepromocion', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

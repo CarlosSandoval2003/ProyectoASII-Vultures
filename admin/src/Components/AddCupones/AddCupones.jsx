@@ -17,7 +17,7 @@ const AddCupones = () => {
 
   const handleGuardar = async () => {
     try {
-      const response = await fetch("https://proyectoasii-vultures.onrender.com/addcupon", {
+      const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/addcupon", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

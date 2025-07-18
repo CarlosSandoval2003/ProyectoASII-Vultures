@@ -21,7 +21,7 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     if (userId && userId !== "0") {
-      fetch(`https://proyectoasii-vultures.onrender.com/cartItemCount/${userId}`)
+      fetch(`https://plankton-app-nhztk.ondigitalocean.app/cartItemCount/${userId}`)
         .then((res) => res.json())
         .then((data) => setCartItemCount(data.count));
     } else {
@@ -30,14 +30,14 @@ const ShopContextProvider = (props) => {
   }, []);
 
   useEffect(() => {
-    fetch('https://proyectoasii-vultures.onrender.com/allproductsDisplay') 
+    fetch('https://plankton-app-nhztk.ondigitalocean.app/allproductsDisplay') 
           .then((res) => res.json()) 
           .then((data) => setProducts(data))
 
 
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://proyectoasii-vultures.onrender.com/getcart', {
+      fetch('https://plankton-app-nhztk.ondigitalocean.app/getcart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',
@@ -78,7 +78,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://proyectoasii-vultures.onrender.com/addtocart', {
+      fetch('https://plankton-app-nhztk.ondigitalocean.app/addtocart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',
@@ -97,7 +97,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://proyectoasii-vultures.onrender.com/removefromcart', {
+      fetch('https://plankton-app-nhztk.ondigitalocean.app/removefromcart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',

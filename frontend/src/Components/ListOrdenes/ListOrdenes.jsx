@@ -8,7 +8,7 @@ const ListOrdenes = () => {
 
   const fetchOrdenes = async () => {
     try {
-      const response = await fetch(`https://proyectoasii-vultures.onrender.com/ordenes/${userId}`);
+      const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/ordenes/${userId}`);
       const data = await response.json();
       setOrdenes(data);
     } catch (error) {
@@ -22,7 +22,7 @@ const ListOrdenes = () => {
       return;
     }
     try {
-      await fetch(`https://proyectoasii-vultures.onrender.com/cancelarorden/${id}`, {
+      await fetch(`https://plankton-app-nhztk.ondigitalocean.app/cancelarorden/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -24,7 +24,7 @@ const LoginSignup = () => {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
-    fetch("https://proyectoasii-vultures.onrender.com/countries")
+    fetch("https://plankton-app-nhztk.ondigitalocean.app/countries")
       .then((resp) => resp.json())
       .then((data) => {
         setCountries(data);
@@ -43,7 +43,7 @@ const LoginSignup = () => {
   };
 
   const login = async () => {
-    const response = await fetch("https://proyectoasii-vultures.onrender.com/login", {
+    const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/login", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -64,7 +64,7 @@ const LoginSignup = () => {
   };
 
   const signup = async () => {
-    const response = await fetch("https://proyectoasii-vultures.onrender.com/signup", {
+    const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ const LoginSignup = () => {
   };
   
   const loginAfterSignup = async (userData) => {
-    const response = await fetch("https://proyectoasii-vultures.onrender.com/login", {
+    const response = await fetch("https://plankton-app-nhztk.ondigitalocean.app/login", {
       method: "POST",
       headers: {
         Accept: "application/json",

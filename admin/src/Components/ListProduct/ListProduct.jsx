@@ -15,10 +15,10 @@ const ListProduct = () => {
 
   const fetchProducts = async () => {
     try {
-      let url = 'https://proyectoasii-vultures.onrender.com/allproducts';
+      let url = 'https://plankton-app-nhztk.ondigitalocean.app/allproducts';
       // Si hay un término de búsqueda, agregarlo a la URL
       if (searchTerm.trim() !== '') {
-        url = `https://proyectoasii-vultures.onrender.com/searchproduct?search=${encodeURIComponent(searchTerm)}`;
+        url = `https://plankton-app-nhztk.ondigitalocean.app/searchproduct?search=${encodeURIComponent(searchTerm)}`;
       }
       const response = await fetch(url);
       const data = await response.json();
@@ -34,7 +34,7 @@ const ListProduct = () => {
 
   const fetchItemProducts = async (productId) => {
     try {
-      const response = await fetch(`https://proyectoasii-vultures.onrender.com/itemproducts/${productId}`);
+      const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/itemproducts/${productId}`);
       const data = await response.json();
       setItemProducts(data);
     } catch (error) {
@@ -46,7 +46,7 @@ const ListProduct = () => {
     try {
       const { id, cantidad_disp, precio, estado } = item;
   
-      await fetch("https://proyectoasii-vultures.onrender.com/updateitemproduct", {
+      await fetch("https://plankton-app-nhztk.ondigitalocean.app/updateitemproduct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const ListProduct = () => {
 
   const removeProduct = async (id) => {
     try {
-      await fetch('https://proyectoasii-vultures.onrender.com/removeproduct', {
+      await fetch('https://plankton-app-nhztk.ondigitalocean.app/removeproduct', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,12 +90,12 @@ const handleEdit = async (product) => {
 
   try {
     // Obtener los detalles de los ITEM_PRODUCTO
-    const response = await fetch(`https://proyectoasii-vultures.onrender.com/itemproducts/${product.id}`);
+    const response = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/itemproducts/${product.id}`);
     const data = await response.json();
     setItemProducts(data);
 
     // Obtener los títulos de los ITEM_PRODUCTO
-    const titlesResponse = await fetch(`https://proyectoasii-vultures.onrender.com/itemproducttitles/${product.id}`);
+    const titlesResponse = await fetch(`https://plankton-app-nhztk.ondigitalocean.app/itemproducttitles/${product.id}`);
     const titlesData = await titlesResponse.json();
     setItemTitles(titlesData.titles); // Ahora titlesData.titles debe ser un array de títulos únicos
   } catch (error) {
